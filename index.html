@@ -1,0 +1,1318 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твоё Решение</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5e6a0 0%, #e8d890 20%, #c8d8f0 50%, #2c5f8a 80%, #1a3a5c 100%);
+            color: #1a2b4c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-panel {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 2px solid rgba(44, 95, 138, 0.25);
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: calc(100vh - 60px);
+            z-index: 10;
+            box-shadow: 2px 0 20px rgba(26, 58, 92, 0.12);
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid rgba(44, 95, 138, 0.25);
+        }
+
+        .chosen-card {
+            background: #fff;
+            border: 1px solid rgba(44, 95, 138, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            box-shadow: 0 4px 12px rgba(26, 58, 92, 0.08);
+            animation: slideIn 0.5s ease;
+        }
+
+        .chosen-card-img {
+            width: 50px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            border: 2px solid rgba(44, 95, 138, 0.2);
+            background: #1a3a5c;
+        }
+
+        .chosen-card-content { flex: 1; }
+
+        .chosen-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .chosen-card-num {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #1a3a5c, #2c5f8a);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .chosen-card-category {
+            font-size: 0.65rem;
+            color: #5a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .chosen-card-name {
+            font-size: 0.95rem;
+            color: #1a2b4c;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .chosen-card-note {
+            font-size: 0.8rem;
+            color: #5a7a9a;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .empty-panel {
+            text-align: center;
+            color: #8a9ab0;
+            font-style: italic;
+            margin-top: 50px;
+            font-size: 0.9rem;
+        }
+
+        .main-area {
+            margin-left: 300px;
+            flex: 1;
+            padding-bottom: 60px;
+        }
+
+        .screen {
+            display: none;
+            padding: 30px 40px;
+            min-height: calc(100vh - 100px);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .screen.active { display: block; }
+
+        .welcome-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .welcome-content h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #1a3a5c, #2c5f8a, #3a7abd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #5a7a9a;
+            margin-bottom: 35px;
+        }
+
+        .welcome-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #2a3f5c;
+            text-align: left;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid #1a3a5c;
+            border-radius: 8px;
+        }
+
+        .welcome-text strong { color: #1a3a5c; font-weight: 700; }
+
+        .welcome-decks {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .deck-badge {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(44, 95, 138, 0.25);
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .deck-badge-num { font-size: 2rem; font-weight: 800; color: #1a3a5c; }
+        .deck-badge-name { font-size: 0.85rem; color: #5a7a9a; text-transform: uppercase; font-weight: 600; margin-top: 5px; }
+
+        .step-layout {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .step-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-self: start;
+            position: sticky;
+            top: 30px;
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .step-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a3a5c;
+            margin-bottom: 10px;
+        }
+
+        .step-num {
+            font-size: 0.9rem;
+            color: #5a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .step-instruction {
+            max-width: 750px;
+            margin: 0 auto 25px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #2a3f5c;
+            text-align: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            border: 2px solid rgba(44, 95, 138, 0.15);
+            transition: border-color 0.3s;
+        }
+
+        .cards-grid.heroes-grid { grid-template-columns: repeat(8, 1fr); }
+
+        .grid-card {
+            aspect-ratio: 5/7;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            background: #1a3a5c;
+        }
+
+        .grid-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .grid-card .card-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #1a2b4c;
+            white-space: nowrap;
+            max-width: 95%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: none;
+            z-index: 3;
+        }
+
+        .grid-card.revealed .card-label { display: block; }
+
+        .grid-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(26, 58, 92, 0.35);
+            border-color: #fff;
+            z-index: 5;
+        }
+
+        .grid-card.selected {
+            border-color: #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            transform: translateY(-8px) scale(1.08);
+            z-index: 6;
+        }
+
+        .special-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .special-card {
+            aspect-ratio: 5/7;
+            min-height: 220px;
+            width: 100%;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(26, 58, 92, 0.3);
+            position: relative;
+            background: #1a3a5c;
+            overflow: hidden;
+        }
+
+        .special-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .special-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(26, 58, 92, 0.4);
+        }
+
+        .special-card.selected {
+            border-color: #ffd700;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
+        }
+
+        .special-card-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            line-height: 1.3;
+        }
+
+        .selected-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .selected-display.active { display: flex; }
+
+        .big-card {
+            width: 220px;
+            height: 310px;
+            margin-bottom: 15px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(26, 58, 92, 0.35);
+            background: #1a3a5c;
+        }
+
+        .big-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-caption {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .note-area {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .note-label {
+            font-size: 1rem;
+            color: #1a3a5c;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(44, 95, 138, 0.25);
+            border-radius: 12px;
+            color: #1a2b4c;
+            padding: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        textarea:focus { outline: none; border-color: #1a3a5c; }
+        textarea::placeholder { color: #8a9ab0; font-style: italic; }
+
+        .btn {
+            background: linear-gradient(135deg, #1a3a5c, #2c5f8a);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(26, 58, 92, 0.35);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 58, 92, 0.45);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1a3a5c;
+            color: #1a3a5c;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover { background: rgba(26, 58, 92, 0.08); }
+
+        .btn-small { padding: 10px 20px; font-size: 0.9rem; }
+        .btn-large { padding: 16px 36px; font-size: 1.15rem; }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(44, 95, 138, 0.35);
+            color: #1a3a5c;
+            box-shadow: 0 4px 12px rgba(26, 58, 92, 0.1);
+        }
+
+        .btn-back:hover {
+            background: rgba(26, 58, 92, 0.08);
+            border-color: #1a3a5c;
+        }
+
+        .morals-cards-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 25px auto;
+            max-width: 700px;
+        }
+
+        .moral-card {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            box-shadow: 0 6px 18px rgba(26, 58, 92, 0.15);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .moral-card-img {
+            width: 90px;
+            height: 126px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #1a3a5c;
+            flex-shrink: 0;
+            background: #1a3a5c;
+        }
+
+        .moral-card-content { flex: 1; }
+
+        .moral-card-num {
+            font-size: 0.75rem;
+            color: #5a7a9a;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .moral-card-name {
+            font-size: 1.2rem;
+            color: #1a2b4c;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        .morals-note {
+            font-size: 0.95rem;
+            color: #2a3f5c;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .moral-input-area { max-width: 700px; margin: 35px auto; }
+
+        .moral-input-area h3 {
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .moral-input-area textarea { height: 120px; font-size: 1rem; }
+
+        .final-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 2px solid rgba(44, 95, 138, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 100;
+        }
+
+        .footer-text { font-size: 0.9rem; color: #1a3a5c; font-weight: 600; }
+        .footer-link { color: #2c5f8a; text-decoration: none; font-weight: 700; }
+        .footer-link:hover { color: #1a3a5c; text-decoration: underline; }
+
+        .example-toggle { position: fixed; bottom: 85px; right: 25px; z-index: 100; }
+        .example-toggle.hidden { display: none; }
+
+        .example-btn {
+            background: linear-gradient(135deg, #1a3a5c, #2c5f8a);
+            color: #fff;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 5px 18px rgba(26, 58, 92, 0.4);
+        }
+
+        .example-btn:hover { transform: scale(1.12); }
+
+        .example-panel {
+            position: fixed;
+            bottom: 150px;
+            right: 25px;
+            width: 300px;
+            max-height: 55vh;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #1a3a5c;
+            border-radius: 14px;
+            padding: 18px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(26, 58, 92, 0.25);
+        }
+
+        .example-panel.show { display: block; }
+
+        .example-card-preview {
+            width: 100%;
+            aspect-ratio: 5/7;
+            max-height: 220px;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: #1a3a5c;
+        }
+
+        .example-card-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .example-text { font-size: 0.9rem; line-height: 1.6; color: #2a3f5c; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 1100px) {
+            .cards-grid { grid-template-columns: repeat(4, 1fr); }
+            .cards-grid.heroes-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .left-panel {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 2px solid rgba(44, 95, 138, 0.25);
+                max-height: 180px;
+            }
+            .main-area { margin-left: 0; }
+            .screen { padding: 20px; }
+            .step-layout { grid-template-columns: 1fr; }
+            .cards-grid { grid-template-columns: repeat(2, 1fr); }
+            .cards-grid.heroes-grid { grid-template-columns: repeat(2, 1fr); }
+            .welcome-content h1 { font-size: 2.2rem; }
+            .step-header h2 { font-size: 1.8rem; }
+            .moral-card { flex-direction: column; }
+            .moral-card-img { width: 100%; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="left-panel">
+        <div class="panel-title">Твоя История</div>
+        <div id="chosenCardsList">
+            <div class="empty-panel">Здесь появятся<br>выбранные карты</div>
+        </div>
+    </div>
+
+    <div class="main-area" id="mainArea"></div>
+
+    <div class="footer">
+        <div class="footer-text">Игра "Твое решение" Ольги Ашмаровой</div>
+        <a href="https://vk.ru/ashmarovawriter" target="_blank" class="footer-link">vk.ru/ashmarovawriter</a>
+    </div>
+
+    <div class="example-toggle" id="exampleToggle">
+        <button class="example-btn" onclick="toggleExample()">?</button>
+    </div>
+
+    <div class="example-panel" id="examplePanel">
+        <div class="example-card-preview" id="exampleCardPreview"></div>
+        <div class="example-text" id="exampleText"></div>
+    </div>
+
+    <script>
+        // ============================================================
+        // ПЕРЕМЕШИВАНИЕ (алгоритм Фишера-Йетса)
+        // ============================================================
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Создаёт пары {name, originalIndex} и перемешивает их
+        // Это гарантирует, что название и картинка всегда соответствуют друг другу
+        function createShuffledDeck(cardNames) {
+            const cards = cardNames.map((name, index) => ({ name, originalIndex: index }));
+            return shuffleArray(cards);
+        }
+
+        // ============================================================
+        // БАЗОВЫЕ ДАННЫЕ (фиксированный порядок)
+        // ============================================================
+        const BASE_STEPS = [
+            {
+                type: 'problem',
+                title: 'Проблема',
+                num: 1,
+                instruction: 'Выбери карту из стопки или придумай свою. Сформулируй проблему без отрицаний: не «я не умею отказывать», а «я соглашаюсь слишком быстро». Проблема — топливо истории.',
+                cardNames: ["Гадкий утёнок", "Невзаимная любовь", "Одиночество", "Поиск себя", "Потеря времени", "Предательство семьи", "Разочарование в цели"],
+                specialLabel: 'Твоя',
+                specialSub: 'проблема'
+            },
+            {
+                type: 'world',
+                title: 'Мир',
+                num: 2,
+                instruction: 'Выбери карту мира или придумай свой. На что похож этот мир? Что в нём возможно? И какие в нём ограничения?',
+                cardNames: ["Древний Египет", "Киберпанк", "Космос", "Мир магии", "Первобытное общество", "Природа", "Реальный город"],
+                specialLabel: 'Твой',
+                specialSub: 'мир'
+            },
+            {
+                type: 'hero',
+                title: 'Герой',
+                num: 3,
+                instruction: 'Выбери карту героя или придумай своего. Какой он? Почему эта проблема актуальна именно для него? Что вас объединяет?',
+                cardNames: ["Актёр", "Волшебник", "Врач", "Король", "Крестьянин", "Музыкант", "Охотник", "Разбойник", "Ребёнок", "Спортсмен", "Старик", "Торговец", "Ученик", "Учитель", "Художник"],
+                specialLabel: 'Твой',
+                specialSub: 'герой',
+                isHeroes: true
+            },
+            {
+                type: 'circumstance',
+                title: 'Обстоятельства',
+                num: 4,
+                instruction: 'Выбери карту обстоятельств или придумай свои. Что заставит героя столкнуться с проблемой лицом к лицу? Почему её нельзя обойти?',
+                cardNames: ["Внешние факторы", "Внутренний конфликт", "Встреча", "Герой против мира", "Смена статуса", "Обучение", "Обычный день"],
+                specialLabel: 'Твои',
+                specialSub: 'обстоятельства'
+            },
+            {
+                type: 'resolution',
+                title: 'Развязка',
+                num: 5,
+                instruction: 'Выбери карту развязки или придумай свою. Что поможет герою решиться? И как он изменится? Развязка — это ответ на вопрос «кем он стал?».',
+                cardNames: ["Внешние силы", "Другой путь", "Любовь", "Новая способность", "Помощь друзей", "Преодоление слабости", "Чудо"],
+                specialLabel: 'Твоя',
+                specialSub: 'развязка'
+            }
+        ];
+
+        const EXAMPLES = {
+            problem: { cardName: "Разочарование в цели", text: "<p><strong>Разочарование в цели</strong></p><p>Это топливо нашей истории. С разочарованием в цели сталкивался каждый, а сегодня столкнётся герой.</p>" },
+            world: { cardName: "Древний Египет", text: "<p><strong>Древний Египет</strong></p><p>Мир древних времён, где-то между пирамидами на берегах Нила, герой столкнётся с разочарованием в цели.</p>" },
+            hero: { cardName: "Актёр", text: "<p><strong>Актёр</strong></p><p>Актёр в Древнем Египте? Скорее шут, лицедей при дворе фараона. Его цель — получить милость фараона и жизнь в достатке.</p>" },
+            circumstance: { cardName: "Смена статуса", text: "<p><strong>Смена статуса</strong></p><p>Жрец увидел актёра и указал Фараону, что он обладает мистической силой. Жизнь при дворе обернулась мучительными истязаниями.</p>" },
+            resolution: { cardName: "Новая способность", text: "<p><strong>Новая способность</strong></p><p>Измученный актёр обретает настоящие мистические способности. Призывает дождь. Он снова един со своими близкими.</p>" }
+        };
+
+        const FOLDERS = {
+            problem: 'problems',
+            world: 'worlds',
+            hero: 'heroes',
+            circumstance: 'circumstances',
+            resolution: 'resolutions'
+        };
+
+        function getCardImage(type, index) {
+            return `images/${FOLDERS[type]}/${index}.jpg`;
+        }
+
+        function getCardBack(type) {
+            return `images/backs/${type}.jpg`;
+        }
+
+        function getCustomCard(type) {
+            return `images/custom/${type}.jpg`;
+        }
+
+        // ============================================================
+        // СОСТОЯНИЕ
+        // ============================================================
+        let currentSteps = [];
+        let currentStepIndex = -1;
+        let results = [];
+        let currentSelection = null;
+        let fanRevealed = false;
+        let specialRevealed = false;
+
+        // ============================================================
+        // РЕНДЕРИНГ
+        // ============================================================
+        function renderWelcome() {
+            return `
+                <div class="screen active">
+                    <div class="welcome-content">
+                        <h1>ТВОЁ РЕШЕНИЕ</h1>
+                        <div class="welcome-subtitle">Колода-соавтор для тех, кто пишет свою историю</div>
+                        
+                        <div class="welcome-text">
+                            <strong>История — это репетиция решения, за которую не платишь настоящую цену.</strong> Каждая собранная тобой история тренирует три мышцы: <strong>лёгкость игры</strong> (проблема становится материалом, а не приговором), <strong>смелость решений</strong> (привычку действовать, когда финал ещё не виден) и <strong>устойчивость навыка</strong> (умение придумывать решения, когда пришло время).
+                        </div>
+
+                        <div class="welcome-text">
+                            Ты здесь не гадаешь — ты пишешь свою историю. Колода «Твоё решение» — не оракул, а <strong>соавтор</strong>: она определяет структуру, подталкивает тебя, а ты принимаешь решения. Ты — писатель, читатель и герой в одном лице.
+                        </div>
+
+                        <div class="welcome-text">
+                            Тебя ждут пять стопок карт. Тяни по одной карте из стопки по порядку — или придумывай своё. Если хочешь — открой все карты и выбери, что больше подходит. После каждого шага опиши коротко — три-пять фраз — о чём твоя история.
+                        </div>
+
+                        <div class="welcome-decks">
+                            <div class="deck-badge"><div class="deck-badge-num">7</div><div class="deck-badge-name">Проблем</div></div>
+                            <div class="deck-badge"><div class="deck-badge-num">7</div><div class="deck-badge-name">Миров</div></div>
+                            <div class="deck-badge"><div class="deck-badge-num">15</div><div class="deck-badge-name">Героев</div></div>
+                            <div class="deck-badge"><div class="deck-badge-num">7</div><div class="deck-badge-name">Обстоятельств</div></div>
+                            <div class="deck-badge"><div class="deck-badge-num">7</div><div class="deck-badge-name">Развязок</div></div>
+                        </div>
+
+                        <button class="btn btn-large" onclick="startGame()">Начать придумывать историю</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStep(stepIndex) {
+            const step = currentSteps[stepIndex];
+            const gridClass = step.isHeroes ? 'cards-grid heroes-grid' : 'cards-grid';
+            const backUrl = getCardBack(step.type);
+            
+            let cardsHtml = '';
+            step.cards.forEach((cardObj, i) => {
+                // ВАЖНО: используем cardObj.originalIndex для загрузки правильной картинки
+                const imgUrl = getCardImage(step.type, cardObj.originalIndex);
+                const safeName = cardObj.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                cardsHtml += `
+                    <div class="grid-card" data-index="${i}" onclick="selectCard(${i}, '${safeName}', false)">
+                        <img src="${backUrl}" alt="Рубашка" class="card-back-img">
+                        <img src="${imgUrl}" alt="${safeName}" class="card-front-img" style="display:none">
+                        <div class="card-label">${cardObj.name}</div>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="screen active">
+                    <div class="step-layout">
+                        <div class="step-center">
+                            <div class="step-header">
+                                <div class="step-num">Шаг ${step.num} из 5</div>
+                                <h2>${step.title}</h2>
+                            </div>
+                            <div class="step-instruction">${step.instruction}</div>
+                            <div class="${gridClass}" id="cardsGrid">
+                                ${cardsHtml}
+                            </div>
+                            <div class="selected-display" id="selectedDisplay">
+                                <div class="big-card">
+                                    <img id="bigCardImg" src="" alt="Выбранная карта">
+                                </div>
+                                <div class="card-caption" id="cardCaption"></div>
+                                <div class="note-area">
+                                    <div class="note-label">О чём твоя история?</div>
+                                    <textarea id="noteTextarea" placeholder="Три-пять фраз..."></textarea>
+                                    <div class="btn-group">
+                                        <button class="btn btn-back btn-small" onclick="goBack()">← Назад</button>
+                                        <button class="btn" onclick="confirmStep()">Продолжить →</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-right">
+                            <button class="btn btn-outline btn-small" onclick="toggleFanFaces()">Открыть все карты</button>
+                            <div class="special-card-wrapper">
+                                <div class="special-card" id="specialCard" onclick="selectSpecial()">
+                                    <img src="${backUrl}" alt="Рубашка" id="specialImg">
+                                </div>
+                                <div class="special-card-caption">${step.specialLabel}<br>${step.specialSub}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMoral() {
+            let cardsHtml = '';
+            results.forEach((r, i) => {
+                const imgUrl = r.isSpecial ? getCustomCard(r.type) : getCardImage(r.type, r.index);
+                const step = currentSteps.find(s => s.type === r.type);
+                cardsHtml += `
+                    <div class="moral-card">
+                        <img class="moral-card-img" src="${imgUrl}" alt="${r.name}" onerror="this.style.background='#1a3a5c'">
+                        <div class="moral-card-content">
+                            <div class="moral-card-num">Шаг ${r.step} · ${step ? step.title : r.type}</div>
+                            <div class="moral-card-name">${r.isSpecial ? '✦ ' : ''}${r.name}</div>
+                            ${r.note ? `<div class="morals-note">«${r.note}»</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="screen active">
+                    <div class="step-header">
+                        <div class="step-num">Финал</div>
+                        <h2>Мораль твоей истории</h2>
+                    </div>
+                    <div class="step-instruction">Посмотри на все карты своей истории. Как герой решил проблему — одной фразой? И что ты заберёшь из его истории в свою жизнь?</div>
+                    <div class="morals-cards-row">${cardsHtml}</div>
+                    <div class="moral-input-area">
+                        <h3>Мораль истории</h3>
+                        <textarea id="moralText" placeholder="Одной фразой: как герой решил проблему? И что ты заберёшь из его истории?"></textarea>
+                    </div>
+                    <div class="final-actions">
+                        <button class="btn btn-back btn-small" onclick="goBack()">← Назад</button>
+                        <button class="btn btn-large" onclick="downloadPDF()">Сохранить в PDF</button>
+                        <button class="btn btn-outline btn-large" onclick="location.reload()">Начать новую историю</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderScreen() {
+            const mainArea = document.getElementById('mainArea');
+            
+            if (currentStepIndex === -1) {
+                mainArea.innerHTML = renderWelcome();
+            } else if (currentStepIndex < currentSteps.length) {
+                mainArea.innerHTML = renderStep(currentStepIndex);
+                fanRevealed = false;
+                specialRevealed = false;
+            } else {
+                mainArea.innerHTML = renderMoral();
+            }
+            
+            updateExampleToggle();
+            window.scrollTo(0, 0);
+        }
+
+        function startGame() {
+            // ПЕРЕМЕШИВАЕМ КАРТЫ ПРИ КАЖДОМ НОВОМ ЗАПУСКЕ
+            currentSteps = BASE_STEPS.map(step => ({
+                ...step,
+                cards: createShuffledDeck(step.cardNames)
+            }));
+            
+            currentStepIndex = 0;
+            results = [];
+            currentSelection = null;
+            fanRevealed = false;
+            specialRevealed = false;
+            renderScreen();
+        }
+
+        // ============================================================
+        // ИСПРАВЛЕНИЕ БАГА: selectCard теперь корректно обрабатывает special-карты
+        // При cardIndex = -1 (special) не обращаемся к step.cards[-1]
+        // ============================================================
+        function selectCard(cardIndex, cardName, isSpecial) {
+            const step = currentSteps[currentStepIndex];
+            
+            // ВАЖНО: сначала определяем isSpecial, потом обращаемся к массиву
+            if (isSpecial) {
+                currentSelection = { 
+                    cardIndex: -1, 
+                    cardName, 
+                    imageIndex: -1,  // специальное значение для custom-карт
+                    isSpecial: true 
+                };
+            } else {
+                const cardObj = step.cards[cardIndex];
+                currentSelection = { 
+                    cardIndex, 
+                    cardName, 
+                    imageIndex: cardObj.originalIndex,
+                    isSpecial: false 
+                };
+            }
+            
+            document.querySelectorAll('.grid-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('specialCard').classList.remove('selected');
+            
+            if (!isSpecial) {
+                const card = document.querySelector(`.grid-card[data-index="${cardIndex}"]`);
+                if (card) card.classList.add('selected');
+            } else {
+                document.getElementById('specialCard').classList.add('selected');
+                const specialImg = document.getElementById('specialImg');
+                specialImg.src = getCustomCard(step.type);
+                specialRevealed = true;
+            }
+            
+            const display = document.getElementById('selectedDisplay');
+            const bigCardImg = document.getElementById('bigCardImg');
+            const caption = document.getElementById('cardCaption');
+            
+            // ВАЖНО: imgUrl считаем в зависимости от isSpecial
+            const imgUrl = isSpecial 
+                ? getCustomCard(step.type) 
+                : getCardImage(step.type, currentSelection.imageIndex);
+            
+            bigCardImg.src = imgUrl;
+            caption.innerText = cardName;
+            
+            display.classList.add('active');
+            setTimeout(() => {
+                document.getElementById('noteTextarea').focus();
+            }, 100);
+        }
+
+        function selectSpecial() {
+            const step = currentSteps[currentStepIndex];
+            if (!specialRevealed) {
+                const specialImg = document.getElementById('specialImg');
+                specialImg.src = getCustomCard(step.type);
+                specialRevealed = true;
+                setTimeout(() => {
+                    selectCard(-1, `${step.specialLabel} ${step.specialSub}`, true);
+                }, 300);
+            } else {
+                selectCard(-1, `${step.specialLabel} ${step.specialSub}`, true);
+            }
+        }
+
+        function toggleFanFaces() {
+            fanRevealed = !fanRevealed;
+            
+            document.querySelectorAll('.grid-card').forEach(card => {
+                const backImg = card.querySelector('.card-back-img');
+                const frontImg = card.querySelector('.card-front-img');
+                
+                if (fanRevealed) {
+                    backImg.style.display = 'none';
+                    frontImg.style.display = 'block';
+                    card.classList.add('revealed');
+                } else {
+                    backImg.style.display = 'block';
+                    frontImg.style.display = 'none';
+                    card.classList.remove('revealed');
+                }
+            });
+        }
+
+        function confirmStep() {
+            if (!currentSelection) {
+                const grid = document.getElementById('cardsGrid');
+                if (grid) {
+                    grid.style.borderColor = '#e74c3c';
+                    setTimeout(() => { grid.style.borderColor = ''; }, 1000);
+                }
+                alert('Сначала выбери карту из сетки или нажми "Твоя..." справа');
+                return;
+            }
+            
+            const step = currentSteps[currentStepIndex];
+            const note = document.getElementById('noteTextarea').value.trim();
+            
+            const newResult = {
+                step: step.num,
+                type: step.type,
+                name: currentSelection.cardName,
+                index: currentSelection.imageIndex,
+                isSpecial: currentSelection.isSpecial,
+                note
+            };
+            
+            const existingIndex = results.findIndex(r => r.step === step.num);
+            
+            if (existingIndex !== -1) {
+                results[existingIndex] = newResult;
+                rebuildHistory();
+            } else {
+                results.push(newResult);
+                addToHistory(newResult);
+            }
+            
+            currentStepIndex++;
+            currentSelection = null;
+            fanRevealed = false;
+            specialRevealed = false;
+            renderScreen();
+        }
+
+        function goBack() {
+            if (currentStepIndex === -1) return;
+            
+            if (results.length > 0) {
+                const lastResult = results[results.length - 1];
+                const currentStepNum = currentStepIndex < currentSteps.length ? currentSteps[currentStepIndex].num : 6;
+                if (lastResult.step === currentStepNum) {
+                    results.pop();
+                    rebuildHistory();
+                }
+            }
+            
+            currentStepIndex--;
+            currentSelection = null;
+            fanRevealed = false;
+            specialRevealed = false;
+            renderScreen();
+        }
+
+        function addToHistory(data) {
+            const list = document.getElementById('chosenCardsList');
+            const empty = list.querySelector('.empty-panel');
+            if (empty) empty.remove();
+            
+            const imgUrl = data.isSpecial ? getCustomCard(data.type) : getCardImage(data.type, data.index);
+            const step = currentSteps.find(s => s.type === data.type);
+            
+            const div = document.createElement('div');
+            div.className = 'chosen-card';
+            div.innerHTML = `
+                <img class="chosen-card-img" src="${imgUrl}" alt="${data.name}" onerror="this.style.background='#1a3a5c'">
+                <div class="chosen-card-content">
+                    <div class="chosen-card-header">
+                        <div class="chosen-card-num">${data.step}</div>
+                        <div class="chosen-card-category">${step ? step.title : data.type}</div>
+                    </div>
+                    <div class="chosen-card-name">${data.isSpecial ? '✦ ' : ''}${data.name}</div>
+                    ${data.note ? `<div class="chosen-card-note">«${data.note}»</div>` : ''}
+                </div>
+            `;
+            list.appendChild(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function rebuildHistory() {
+            const list = document.getElementById('chosenCardsList');
+            list.innerHTML = '<div class="empty-panel">Здесь появятся<br>выбранные карты</div>';
+            results.forEach(data => addToHistory(data));
+        }
+
+        function toggleExample() {
+            document.getElementById('examplePanel').classList.toggle('show');
+        }
+
+        function updateExampleToggle() {
+            const toggle = document.getElementById('exampleToggle');
+            const panel = document.getElementById('examplePanel');
+            
+            if (currentStepIndex === -1 || currentStepIndex >= currentSteps.length) {
+                toggle.classList.add('hidden');
+                panel.classList.remove('show');
+            } else {
+                toggle.classList.remove('hidden');
+                const step = currentSteps[currentStepIndex];
+                const example = EXAMPLES[step.type];
+                if (example) {
+                    const preview = document.getElementById('exampleCardPreview');
+                    // Ищем карточку по имени в перемешанном массиве
+                    const cardObj = step.cards.find(c => c.name === example.cardName);
+                    if (cardObj) {
+                        const imgUrl = getCardImage(step.type, cardObj.originalIndex);
+                        preview.innerHTML = `<img src="${imgUrl}" alt="${example.cardName}" onerror="this.parentElement.style.background='#1a3a5c'">`;
+                    } else {
+                        preview.innerHTML = '';
+                    }
+                    document.getElementById('exampleText').innerHTML = example.text;
+                }
+            }
+        }
+
+        async function downloadPDF() {
+            try {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = 'Создаю PDF...';
+                btn.disabled = true;
+                
+                const moralText = document.getElementById('moralText')?.value.trim() || '';
+                
+                const pdfContainer = document.createElement('div');
+                pdfContainer.style.cssText = `
+                    position: fixed;
+                    left: -10000px;
+                    top: 0;
+                    width: 800px;
+                    background: linear-gradient(135deg, #f5e6a0 0%, #e8d890 20%, #c8d8f0 50%, #2c5f8a 80%, #1a3a5c 100%);
+                    padding: 40px;
+                    font-family: 'Inter', sans-serif;
+                    color: #1a2b4c;
+                `;
+                
+                let html = `
+                    <h1 style="text-align:center; font-size:2.5rem; color:#1a3a5c; margin-bottom:10px;">ТВОЁ РЕШЕНИЕ</h1>
+                    <p style="text-align:center; color:#5a7a9a; margin-bottom:30px;">${new Date().toLocaleDateString('ru-RU')}</p>
+                `;
+                
+                results.forEach((r) => {
+                    const imgUrl = r.isSpecial ? getCustomCard(r.type) : getCardImage(r.type, r.index);
+                    const step = currentSteps.find(s => s.type === r.type);
+                    html += `
+                        <div style="display:flex; gap:15px; margin-bottom:20px; background:rgba(255,255,255,0.9); padding:15px; border-radius:12px; align-items:center;">
+                            <img src="${imgUrl}" style="width:90px; height:126px; object-fit:cover; border-radius:10px; border:2px solid #1a3a5c;">
+                            <div>
+                                <div style="font-size:0.8rem; color:#5a7a9a; text-transform:uppercase; margin-bottom:4px;">Шаг ${r.step} · ${step ? step.title : r.type}</div>
+                                <div style="font-size:1.3rem; font-weight:800; color:#1a3a5c; margin-bottom:8px;">${r.isSpecial ? '✦ ' : ''}${r.name}</div>
+                                ${r.note ? `<div style="font-style:italic; color:#2a3f5c; font-size:1rem; line-height:1.5;">«${r.note}»</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (moralText) {
+                    html += `
+                        <div style="margin-top:30px; padding-top:20px; border-top:2px solid #1a3a5c;">
+                            <h3 style="color:#1a3a5c; margin-bottom:10px;">Мораль истории</h3>
+                            <p style="font-size:1.1rem; line-height:1.6; font-style:italic; color:#2a3f5c;">${moralText}</p>
+                        </div>
+                    `;
+                }
+                
+                pdfContainer.innerHTML = html;
+                document.body.appendChild(pdfContainer);
+                
+                const images = pdfContainer.querySelectorAll('img');
+                await Promise.all(Array.from(images).map(img => {
+                    return new Promise(resolve => {
+                        if (img.complete) resolve();
+                        else {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        }
+                    });
+                }));
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const canvas = await html2canvas(pdfContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#1a3a5c',
+                    logging: false
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save(`Tvoe_Reshenie_${new Date().toISOString().slice(0,10)}.pdf`);
+                
+                document.body.removeChild(pdfContainer);
+                btn.innerText = originalText;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('Ошибка PDF:', error);
+                alert('Не удалось создать PDF.');
+                const btn = event.target;
+                btn.innerText = 'Сохранить в PDF';
+                btn.disabled = false;
+            }
+        }
+
+        // Инициализация — показываем приветствие
+        renderScreen();
+    </script>
+</body>
+</html>
+
+
+              <script>
+                              // ❌ НЕПРАВИЛЬНО — падает при cardIndex = -1
+const cardObj = step.cards[cardIndex];
+const img = getCardImage(type, cardObj.originalIndex);
+
+// ✅ ПРАВИЛЬНО — сначала проверяем isSpecial
+const imgUrl = isSpecial 
+    ? getCustomCard(type) 
+    : getCardImage(type, step.cards[cardIndex].originalIndex);
+
+
+              </script>
+                        </body>
+                        </html>
+                    
